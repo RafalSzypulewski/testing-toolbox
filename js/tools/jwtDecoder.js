@@ -28,7 +28,7 @@ export default {
           d.times.length
             ? h('table', {}, h('tr', {}, h('th', {}, 'Claim'), h('th', {}, 'Epoch'), h('th', {}, 'UTC time')),
                 d.times.map((t) => h('tr', {}, h('td', {}, `${t.label} (${t.claim})`), h('td', { class: 'mono' }, String(t.seconds)), h('td', { class: 'mono' }, t.iso))))
-            : null,
+            : '',
           h('h3', {}, 'Signature'),
           h('pre', { class: 'visual' }, d.signature || '(none)'),
         );

@@ -15,6 +15,7 @@ A collection of small browser-based tools for software testers. Everything runs 
 | **JSON formatter** | Format, minify, sort keys; errors show line and column |
 | **Encode / decode** | Base64, Base64URL, URL, HTML entities, `\uXXXX` escapes |
 | **Timestamp converter** | Epoch seconds/ms and dates across time zones |
+| **Regex tester** | JavaScript regex with live highlighting, capture groups, replace preview and ready-made patterns (email, URL, UUID, PESEL, NIP, ...) |
 
 Generated identifiers pass the official checksum rules but are random: they do not belong to real people, companies or bank accounts.
 
