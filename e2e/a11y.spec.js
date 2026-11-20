@@ -35,6 +35,11 @@ const STATES = {
     ['dates tab', async (p) => p.click('.tab:text-is("Dates and times")')],
   ],
   'file-generator': [['created', async (p) => { await p.click('button:text-is("Create file")'); await p.waitForSelector('table button'); }]],
+  pairwise: [
+    ['example', async (p) => p.waitForSelector('table')],
+    ['error', async (p) => p.getByLabel('Parameters and their values').fill('broken')],
+    ['no rules, three-way', async (p) => { await p.getByLabel('Rules: combinations that cannot happen (optional)').fill(''); await p.getByLabel('Coverage').selectOption('3'); await p.waitForSelector('table'); }],
+  ],
   'text-utilities': [
     ['sorted', async (p) => { await p.locator('textarea').first().fill('b\na\nc'); await p.getByLabel('Operation').selectOption({ label: 'Sort lines alphabetically' }); }],
   ],

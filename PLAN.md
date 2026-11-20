@@ -19,7 +19,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 - [x] README with tool list, local run instructions, Pages deployment and "add a tool" guide
 - [x] First PR (#1) merged into `main`
 
-### Tools (15)
+### Tools (16)
 | Tool | Category | Notes |
 |---|---|---|
 | Counter string | Generate | Ported from the WPF `StringGenerator` app; configurable marker |
@@ -33,6 +33,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 | Timestamp converter | Convert | Epoch seconds/ms and dates, several time zones, live clock |
 | Hash calculator | Convert | MD5 (own implementation), SHA-1/256/384/512 via Web Crypto, HMAC for all five, file hashing up to 100 MB, paste-a-checksum comparer |
 | Text utilities | Convert | 37 operations in 4 groups (case, lines, clean-up, extract); live results, chaining, language-aware sorting, exact line endings preserved on Copy/Download |
+| Pairwise generator | Generate | Seeded greedy covering-array search for strength 1, 2 or 3; rules (forbidden combinations, IF/THEN, alternatives, `<>`), invalid values tested alone, exclusion report, independent verifier; reaches the proven optimum on 4 of 9 benchmark shapes |
 | File generator | Generate | Exact-size files up to 100 MiB: txt, csv, json (valid, padded), PNG (1x1 to 1920x1080) and PDF (valid, padded with legal filler), zeros, random; size ±1 mode; verified with ImageMagick, Pillow, poppler and pypdf |
 | Boundary values | Generate | Length cases with expected accept/reject and UTF-8 byte counts; exact (BigInt) numeric limits incl. int64/uint64 and decimal steps; date range edges, 18 calendar edge cases, epoch limits, DST gaps/repeats for Europe and the USA (verified against the time zone database) |
 | Text diff | Inspect | Myers diff by line/word/character, inline highlights, ignore whitespace/case, collapse to changes, unified-diff export (verified with `patch`), file loading to report CRLF/LF and final-newline differences |
@@ -47,7 +48,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 
 ### 2. Quality and safety net
 - [x] GitHub Actions workflow (`.github/workflows/test.yml`) runs `npm test` on Node 22 and 24 for every push to `main` and every PR
-- [x] Playwright browser tests committed (`npm run e2e`, 238 tests in `e2e/`, including the accessibility ones) and run in CI next to the unit tests; every test fails on console errors; the tool list comes from the registry
+- [x] Playwright browser tests committed (`npm run e2e`, 263 tests in `e2e/`, including the accessibility ones) and run in CI next to the unit tests; every test fails on console errors; the tool list comes from the registry
 - [x] Accessibility pass (1.2.0): skip link, focus handling, ARIA tabs, named buttons, table headers, visible control borders, relative font sizes, reduced motion; axe-core, keyboard, zoom and palette-contrast tests in CI
 - [ ] Try the site with a real screen reader (NVDA on Windows, VoiceOver on Mac/iPhone) and with voice control; automated checks cannot judge how it sounds
 - [ ] Update the GitHub Actions used in `.github/workflows/test.yml` (`checkout`, `setup-node`) to versions that run on Node 24; the CI log warns that the current ones target the deprecated Node 20
@@ -66,6 +67,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 10. [ ] **More Polish identifiers**: ID card number (dowód osobisty), KRS, postal code and bank account (NRB) validators
 
 ### 4. Improvements to existing tools
+- [ ] Pairwise generator: must-include seed cases (existing tests that count towards coverage), weights to prefer common values, import and export of the PICT model format, and a 4-way option for small inputs
 - [ ] Counter string and Random string: remember the last-used settings per browser
 - [ ] Naughty strings: add categories (file names, email and URL edge cases, date strings) and a "mark as used" tick
 - [ ] Test data: seed option for reproducible data, address and company-name fields, copy a single record
@@ -83,6 +85,7 @@ Browsers cannot make arbitrary network requests (CORS), so a port checker or HTT
 - Some clipboards normalise special characters (for example null bytes), so verify pasted values in the target system.
 - The Polish identifiers are checksum-valid but random; phone numbers are random mobile numbers and may belong to real people, so do not use them to send messages.
 - JWT decoding does not verify signatures.
+- The pairwise generator uses a heuristic search: the number of cases is close to, but not guaranteed to be, the smallest possible (it is provably optimal when it equals the product of the two largest value counts). Inputs with more than 1,500,000 pairs are refused, and the independent coverage check is skipped above 60,000 pairs.
 - The theme button shows only the symbol ◐ (it has the accessible name "Toggle theme"); axe lists it as "needs review" because it cannot compute contrast for a symbol. Its contrast was checked by hand (15 to 1).
 - Text utilities sorting depends on the chosen language rules (default: your browser's); sorting 100,000 lines takes about 2 seconds. A text that starts with an empty line and has no final line break cannot be reversed back exactly, because a final line break is treated as the end of the last line (like Unix tools).
 - The file generator is limited to 100 MiB (files are built in memory), cannot make a PNG that is 1 to 11 bytes larger than its minimum, and does not yet make JPEG, ZIP or Office files. Padded files compress extremely well; use random bytes to test upload speed.
