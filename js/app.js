@@ -1,5 +1,10 @@
 import { tools } from './registry.js';
 import { h } from './util.js';
+import { VERSION, CHANGELOG_URL } from './version.js';
+
+const versionLink = document.getElementById('version');
+versionLink.textContent = `v${VERSION}`;
+versionLink.href = CHANGELOG_URL;
 
 const nav = document.getElementById('nav');
 const main = document.getElementById('main');

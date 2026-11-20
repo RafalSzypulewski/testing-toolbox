@@ -12,11 +12,12 @@ Status as of 2026-11-20. Tick items off as they are done.
 - [x] Pure logic separated from UI in `js/lib/`, covered by 23 `node:test` unit tests (`npm test`)
 - [x] Browser check in Chromium: every tool exercised, no console errors, no horizontal scroll on mobile
 - [x] CI runs the unit tests on Node 22 and 24 (green on PR #3)
+- [x] Version number (1.0.0) shown on every page, linked to `CHANGELOG.md`; a test keeps `js/version.js`, `package.json` and the changelog in sync
 - [x] Layout checked at 320 px width on every tool (fixed overflow on Test data, Timestamp, Hash calculator, Text diff and Boundary values)
 - [x] README with tool list, local run instructions, Pages deployment and "add a tool" guide
 - [x] First PR (#1) merged into `main`
 
-### Tools (14)
+### Tools (15)
 | Tool | Category | Notes |
 |---|---|---|
 | Counter string | Generate | Ported from the WPF `StringGenerator` app; configurable marker |
@@ -29,6 +30,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 | Encode / decode | Convert | Base64, Base64URL, URL, HTML entities, `\uXXXX` |
 | Timestamp converter | Convert | Epoch seconds/ms and dates, several time zones, live clock |
 | Hash calculator | Convert | MD5 (own implementation), SHA-1/256/384/512 via Web Crypto, HMAC for all five, file hashing up to 100 MB, paste-a-checksum comparer |
+| Text utilities | Convert | 37 operations in 4 groups (case, lines, clean-up, extract); live results, chaining, language-aware sorting, exact line endings preserved on Copy/Download |
 | File generator | Generate | Exact-size files up to 100 MiB: txt, csv, json (valid, padded), PNG (1x1 to 1920x1080) and PDF (valid, padded with legal filler), zeros, random; size ±1 mode; verified with ImageMagick, Pillow, poppler and pypdf |
 | Boundary values | Generate | Length cases with expected accept/reject and UTF-8 byte counts; exact (BigInt) numeric limits incl. int64/uint64 and decimal steps; date range edges, 18 calendar edge cases, epoch limits, DST gaps/repeats for Europe and the USA (verified against the time zone database) |
 | Text diff | Inspect | Myers diff by line/word/character, inline highlights, ignore whitespace/case, collapse to changes, unified-diff export (verified with `patch`), file loading to report CRLF/LF and final-newline differences |
@@ -54,7 +56,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 4. [x] **Boundary values**: min/max for common numeric types, dates, and "string of length N±1" for field limits (also clock changes and epoch limits)
 5. [x] **File-of-size generator**: downloadable files of an exact size (txt, csv, json, zero-filled) for upload tests (also PNG, PDF, random bytes and a size ±1 mode)
 6. [ ] **Lorem ipsum / sentence generator**: paragraphs, sentences or words, English and Polish
-7. [ ] **Text utilities**: change case, sort, dedupe, trim, join/split lines, line numbering
+7. [x] **Text utilities**: change case, sort, dedupe, trim, join/split lines, line numbering
 8. [ ] **Colour contrast checker**: WCAG AA/AAA ratio for two colours
 9. [x] **Date and time test cases**: leap days, DST changes, month ends, year 2038, in a copyable list (delivered inside Boundary values)
 10. [ ] **More Polish identifiers**: ID card number (dowód osobisty), KRS, postal code and bank account (NRB) validators
@@ -77,6 +79,7 @@ Browsers cannot make arbitrary network requests (CORS), so a port checker or HTT
 - Some clipboards normalise special characters (for example null bytes), so verify pasted values in the target system.
 - The Polish identifiers are checksum-valid but random; phone numbers are random mobile numbers and may belong to real people, so do not use them to send messages.
 - JWT decoding does not verify signatures.
+- Text utilities sorting depends on the chosen language rules (default: your browser's); sorting 100,000 lines takes about 2 seconds. A text that starts with an empty line and has no final line break cannot be reversed back exactly, because a final line break is treated as the end of the last line (like Unix tools).
 - The file generator is limited to 100 MiB (files are built in memory), cannot make a PNG that is 1 to 11 bytes larger than its minimum, and does not yet make JPEG, ZIP or Office files. Padded files compress extremely well; use random bytes to test upload speed.
 - Browsers convert line breaks typed or pasted into a text box to LF, so CRLF vs LF differences can only be detected for text loaded from a file (Text diff offers this).
 

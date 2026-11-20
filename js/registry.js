@@ -13,10 +13,11 @@ import hashCalculator from './tools/hashCalculator.js';
 import textDiff from './tools/textDiff.js';
 import boundaryValues from './tools/boundaryValues.js';
 import fileGenerator from './tools/fileGenerator.js';
+import textUtilities from './tools/textUtilities.js';
 
 /**
  * Tool shape:
  * { id, name, category, description, keywords?: string[], render(root: HTMLElement): void | (() => void) }
  * render may return a cleanup function (called when the user navigates away).
  */
-export const tools = [counterString, randomString, naughtyStrings, testData, textInspector, jsonFormatter, encoder, jwtDecoder, timestamp, regexTester, hashCalculator, textDiff, boundaryValues, fileGenerator];
+export const tools = [counterString, randomString, naughtyStrings, testData, textInspector, jsonFormatter, encoder, jwtDecoder, timestamp, regexTester, hashCalculator, textDiff, boundaryValues, fileGenerator, textUtilities];

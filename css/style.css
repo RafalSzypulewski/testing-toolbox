@@ -38,6 +38,9 @@ a { color: var(--accent); }
 code, pre, textarea, .mono { font-family: var(--mono); font-size: 13px; }
 
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: .6rem 1rem; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+.brand-wrap { display: flex; align-items: baseline; gap: .6rem; min-width: 0; }
+.version { font: 12px var(--mono); color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 999px; padding: .05rem .5rem; white-space: nowrap; }
+.version:hover { color: var(--accent); border-color: var(--accent); }
 .brand { font-weight: 700; font-size: 1.1rem; text-decoration: none; color: var(--text); }
 .icon-btn { font-size: 1.1rem; padding: .25rem .6rem; }
 

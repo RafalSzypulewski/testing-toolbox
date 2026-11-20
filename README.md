@@ -19,9 +19,17 @@ A collection of small browser-based tools for software testers. Everything runs 
 | **File generator** | Download files of an exact size (up to 100 MiB): txt, csv, json, valid PNG (several dimensions), valid PDF, zero-filled or random binary; optional size −1 / size / size +1 set for upload limit tests |
 | **Boundary values** | Strings at min−1/min/max/max+1 length (letters, Polish, emoji, counter string; shows UTF-8 bytes), exact numeric limits for int8 to uint64 or any range and step, date range edges, leap and impossible dates, 32-bit epoch limits, daylight-saving gaps and repeats |
 | **Text diff** | Compare two texts by line, word or character with inline highlights, ignore whitespace/case, collapse unchanged lines, copy as a unified diff (`patch`-compatible); load files to detect CRLF vs LF differences |
+| **Text utilities** | 37 one-click operations: change case (incl. camel/snake/kebab), sort (natural, by length, by number, language-aware), remove or count duplicates, filter, number, join/split (e.g. SQL `IN` lists), trim, remove diacritics, convert line endings, extract emails/URLs/numbers; chain steps with "Use result as input" |
 | **Regex tester** | JavaScript regex with live highlighting, capture groups, replace preview and ready-made patterns (email, URL, UUID, PESEL, NIP, ...) |
 
 Generated identifiers pass the official checksum rules but are random: they do not belong to real people, companies or bank accounts.
+
+## Versioning
+
+The current version is shown at the top of every page and links to [CHANGELOG.md](CHANGELOG.md). It lives in
+three places that must agree: `js/version.js` (what the page shows), `package.json` and the newest entry in
+`CHANGELOG.md`. `npm test` fails if they differ, so a release is: bump all three, merge, done. A new tool or
+feature raises the minor number (1.1.0), a fix the patch number (1.0.1), a breaking change the major number.
 
 ## Run locally
 
