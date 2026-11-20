@@ -35,7 +35,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 - [ ] Add the live URL to the README and the repo "About" box
 
 ### 2. Quality and safety net
-- [x] GitHub Actions workflow (`.github/workflows/test.yml`) runs `npm test` on Node 20 and 22 for every push to `main` and every PR
+- [x] GitHub Actions workflow (`.github/workflows/test.yml`) runs `npm test` on Node 22 and 24 for every push to `main` and every PR
 - [ ] Commit the Playwright smoke test (currently only run ad hoc) as an optional `npm run e2e`
 - [ ] Accessibility pass: keyboard-only use, focus order, colour contrast in both themes
 - [ ] Content-Security-Policy `<meta>` tag (the app loads no third-party scripts)

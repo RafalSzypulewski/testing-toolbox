@@ -24,7 +24,7 @@ ES modules do not load from `file://`, so serve the folder:
 
 ```sh
 npm run serve        # python3 -m http.server 8080 -> http://localhost:8080
-npm test             # unit tests (Node 20+, no dependencies)
+npm test             # unit tests (Node 22+, no dependencies)
 ```
 
 ## Deploy to GitHub Pages
