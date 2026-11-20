@@ -1,4 +1,4 @@
-import { h, field, checkbox, statusLine, copyText } from '../util.js';
+import { h, field, checkbox, statusLine, copyText, tabsWidget } from '../util.js';
 import { utf8Bytes } from '../lib/text.js';
 import {
   FILLS, lengthCases, numberCases, INT_TYPES, NUMBER_SPECIALS, dateCases, SPECIAL_DATES, SPECIAL_TIMESTAMPS, dstCases,
@@ -37,8 +37,6 @@ export default {
   keywords: ['boundary', 'limits', 'edge', 'max length', 'min', 'max', 'int', 'overflow', 'leap', 'dst', 'timezone', 'y2038', 'equivalence'],
   render(root) {
     const panels = {};
-    const tabs = h('div', { class: 'tabs', role: 'tablist' });
-    const body = h('div');
 
     // ---- text length -----------------------------------------------------------------
     {
@@ -168,40 +166,16 @@ export default {
       updateDst();
     }
 
-    // ---- tabs (WAI-ARIA tabs pattern: arrow keys, Home and End move between tabs) ----------------
-    const names = { length: 'Text length', numbers: 'Numbers', dates: 'Dates and times' };
-    const keys = Object.keys(names);
-    tabs.setAttribute('aria-label', 'Kind of values');
-    const buttons = {};
-    const show = (key, focus = false) => {
-      for (const k of keys) {
-        const selected = k === key;
-        buttons[k].setAttribute('aria-selected', String(selected));
-        buttons[k].tabIndex = selected ? 0 : -1;
-        panels[k].hidden = !selected;
-      }
-      if (focus) buttons[key].focus();
-    };
-    for (const key of keys) {
-      buttons[key] = h('button', {
-        class: 'tab', role: 'tab', id: `boundary-tab-${key}`, 'aria-controls': `boundary-panel-${key}`, 'aria-selected': 'false',
-        onclick: () => show(key),
-        onkeydown: (event) => {
-          const at = keys.indexOf(key);
-          const next = { ArrowRight: keys[(at + 1) % keys.length], ArrowLeft: keys[(at + keys.length - 1) % keys.length], Home: keys[0], End: keys.at(-1) }[event.key];
-          if (next) {
-            event.preventDefault();
-            show(next, true);
-          }
-        },
-      }, names[key]);
-      Object.assign(panels[key], { id: `boundary-panel-${key}` });
-      panels[key].setAttribute('role', 'tabpanel');
-      panels[key].setAttribute('aria-labelledby', `boundary-tab-${key}`);
-      tabs.append(buttons[key]);
-      body.append(panels[key]);
-    }
-    root.append(tabs, body);
-    show('length');
+    // ---- tabs (shared ARIA tabs widget) ---------------------------------------------------------
+    const tabs = tabsWidget({
+      label: 'Kind of values',
+      prefix: 'boundary',
+      items: [
+        { key: 'length', label: 'Text length', panel: panels.length },
+        { key: 'numbers', label: 'Numbers', panel: panels.numbers },
+        { key: 'dates', label: 'Dates and times', panel: panels.dates },
+      ],
+    });
+    root.append(tabs.el);
   },
 };

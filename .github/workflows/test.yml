@@ -19,7 +19,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      # No dependencies to install: the unit tests use Node's built-in runner.
+      # The unit tests use Node's built-in runner. PyYAML is only a referee: the YAML tests compare against it when present.
+      - run: sudo apt-get install -y --no-install-recommends python3-yaml
       - run: npm test
 
   e2e:

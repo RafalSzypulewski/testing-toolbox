@@ -7,6 +7,13 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-prac
 // Each tool is also checked after being used, because results, tables and highlights only
 // exist then. `setup` drives the page into its busiest state.
 const STATES = {
+  'json-toolkit': [
+    ['query', async () => {}],
+    ['query error', async (p) => p.getByLabel('JSONPath query').fill('$[')],
+    ['convert', async (p) => p.getByRole('tab', { name: 'Convert' }).click()],
+    ['convert error', async (p) => { await p.getByRole('tab', { name: 'Convert' }).click(); await p.getByLabel('Direction').selectOption('yaml-json'); await p.getByLabel('Input').fill('a: [1'); }],
+    ['compare', async (p) => p.getByRole('tab', { name: 'Compare' }).click()],
+  ],
   'counter-string': [['generated', async (p) => p.click('button.primary')]],
   'random-string': [['generated', async (p) => p.click('button.primary')]],
   'test-data': [

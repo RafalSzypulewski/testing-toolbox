@@ -33,6 +33,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 | Timestamp converter | Convert | Epoch seconds/ms and dates, several time zones, live clock |
 | Hash calculator | Convert | MD5 (own implementation), SHA-1/256/384/512 via Web Crypto, HMAC for all five, file hashing up to 100 MB, paste-a-checksum comparer |
 | Text utilities | Convert | 37 operations in 4 groups (case, lines, clean-up, extract); live results, chaining, language-aware sorting, exact line endings preserved on Copy/Download |
+| JSON toolkit | Convert | Tabs: JSONPath per RFC 9535 (checked against jq); JSON/CSV (checked against Python csv) and JSON/YAML (YAML 1.2 core subset, checked against PyYAML where the versions agree); semantic JSON diff with 4 array modes. Limits: no YAML tags beyond `!!str/int/float/bool/null`, JSONPath regex uses the browser engine, integers beyond 2^53 stay text |
 | Pairwise generator | Generate | Seeded greedy covering-array search for strength 1, 2 or 3; rules (forbidden combinations, IF/THEN, alternatives, `<>`), invalid values tested alone, exclusion report, independent verifier; reaches the proven optimum on 4 of 9 benchmark shapes |
 | File generator | Generate | Exact-size files up to 100 MiB: txt, csv, json (valid, padded), PNG (1x1 to 1920x1080) and PDF (valid, padded with legal filler), zeros, random; size ±1 mode; verified with ImageMagick, Pillow, poppler and pypdf |
 | Boundary values | Generate | Length cases with expected accept/reject and UTF-8 byte counts; exact (BigInt) numeric limits incl. int64/uint64 and decimal steps; date range edges, 18 calendar edge cases, epoch limits, DST gaps/repeats for Europe and the USA (verified against the time zone database) |
@@ -48,7 +49,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 
 ### 2. Quality and safety net
 - [x] GitHub Actions workflow (`.github/workflows/test.yml`) runs `npm test` on Node 22 and 24 for every push to `main` and every PR
-- [x] Playwright browser tests committed (`npm run e2e`, 263 tests in `e2e/`, including the accessibility ones) and run in CI next to the unit tests; every test fails on console errors; the tool list comes from the registry
+- [x] Playwright browser tests committed (`npm run e2e`, 283 tests in `e2e/`, including the accessibility ones) and run in CI next to the unit tests; every test fails on console errors; the tool list comes from the registry
 - [x] Accessibility pass (1.2.0): skip link, focus handling, ARIA tabs, named buttons, table headers, visible control borders, relative font sizes, reduced motion; axe-core, keyboard, zoom and palette-contrast tests in CI
 - [ ] Try the site with a real screen reader (NVDA on Windows, VoiceOver on Mac/iPhone) and with voice control; automated checks cannot judge how it sounds
 - [ ] Update the GitHub Actions used in `.github/workflows/test.yml` (`checkout`, `setup-node`) to versions that run on Node 24; the CI log warns that the current ones target the deprecated Node 20
