@@ -56,13 +56,18 @@ export async function copyText(text, message = 'Copied to clipboard') {
   return true;
 }
 
-export function downloadFile(filename, content, mime = 'text/plain') {
-  const url = URL.createObjectURL(new Blob([content], { type: `${mime};charset=utf-8` }));
+/** Saves a Blob (keeping its own MIME type). */
+export function downloadBlob(filename, blob) {
+  const url = URL.createObjectURL(blob);
   const a = h('a', { href: url, download: filename });
   document.body.append(a);
   a.click();
   a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
+}
+
+export function downloadFile(filename, content, mime = 'text/plain') {
+  downloadBlob(filename, new Blob([content], { type: `${mime};charset=utf-8` }));
 }
 
 /** One-line status area: ok(), error(), clear(). */
