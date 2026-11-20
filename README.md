@@ -16,6 +16,7 @@ A collection of small browser-based tools for software testers. Everything runs 
 | **Encode / decode** | Base64, Base64URL, URL, HTML entities, `\uXXXX` escapes |
 | **Timestamp converter** | Epoch seconds/ms and dates across time zones |
 | **Hash calculator** | MD5, SHA-1/256/384/512 of text or a file (up to 100 MB), HMAC, and a checksum comparer that accepts hex or Base64 |
+| **Text diff** | Compare two texts by line, word or character with inline highlights, ignore whitespace/case, collapse unchanged lines, copy as a unified diff (`patch`-compatible); load files to detect CRLF vs LF differences |
 | **Regex tester** | JavaScript regex with live highlighting, capture groups, replace preview and ready-made patterns (email, URL, UUID, PESEL, NIP, ...) |
 
 Generated identifiers pass the official checksum rules but are random: they do not belong to real people, companies or bank accounts.

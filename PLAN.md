@@ -12,11 +12,11 @@ Status as of 2026-11-20. Tick items off as they are done.
 - [x] Pure logic separated from UI in `js/lib/`, covered by 23 `node:test` unit tests (`npm test`)
 - [x] Browser check in Chromium: every tool exercised, no console errors, no horizontal scroll on mobile
 - [x] CI runs the unit tests on Node 22 and 24 (green on PR #3)
-- [x] Layout checked at 320 px width on every tool (fixed overflow on Test data, Timestamp and Hash calculator)
+- [x] Layout checked at 320 px width on every tool (fixed overflow on Test data, Timestamp, Hash calculator and Text diff)
 - [x] README with tool list, local run instructions, Pages deployment and "add a tool" guide
 - [x] First PR (#1) merged into `main`
 
-### Tools (11)
+### Tools (12)
 | Tool | Category | Notes |
 |---|---|---|
 | Counter string | Generate | Ported from the WPF `StringGenerator` app; configurable marker |
@@ -29,6 +29,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 | Encode / decode | Convert | Base64, Base64URL, URL, HTML entities, `\uXXXX` |
 | Timestamp converter | Convert | Epoch seconds/ms and dates, several time zones, live clock |
 | Hash calculator | Convert | MD5 (own implementation), SHA-1/256/384/512 via Web Crypto, HMAC for all five, file hashing up to 100 MB, paste-a-checksum comparer |
+| Text diff | Inspect | Myers diff by line/word/character, inline highlights, ignore whitespace/case, collapse to changes, unified-diff export (verified with `patch`), file loading to report CRLF/LF and final-newline differences |
 | Regex tester | Inspect | Live highlighting, groups and named groups, replace preview, flags, 10 ready-made patterns incl. PESEL/NIP, 1,000-match cap |
 
 ## Next
@@ -47,7 +48,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 ### 3. New tools, in suggested order
 1. [x] **Regex tester**: pattern and flags, live matches, capture groups, replace preview
 2. [x] **Hash calculator**: SHA-1/256/384/512 of text or a dropped file (Web Crypto), HMAC option (also MD5 and a checksum comparer)
-3. [ ] **Text diff**: two inputs, line and word diff, ignore-whitespace option
+3. [x] **Text diff**: two inputs, line and word diff, ignore-whitespace option (also character mode, unified-diff export and file loading)
 4. [ ] **Boundary values**: min/max for common numeric types, dates, and "string of length N±1" for field limits
 5. [ ] **File-of-size generator**: downloadable files of an exact size (txt, csv, json, zero-filled) for upload tests
 6. [ ] **Lorem ipsum / sentence generator**: paragraphs, sentences or words, English and Polish
@@ -74,6 +75,7 @@ Browsers cannot make arbitrary network requests (CORS), so a port checker or HTT
 - Some clipboards normalise special characters (for example null bytes), so verify pasted values in the target system.
 - The Polish identifiers are checksum-valid but random; phone numbers are random mobile numbers and may belong to real people, so do not use them to send messages.
 - JWT decoding does not verify signatures.
+- Browsers convert line breaks typed or pasted into a text box to LF, so CRLF vs LF differences can only be detected for text loaded from a file (Text diff offers this).
 
 ## Out of scope
 - Any backend, accounts or analytics. Everything stays client-side so test data and tokens never leave the machine.
