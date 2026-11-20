@@ -12,11 +12,11 @@ Status as of 2026-11-20. Tick items off as they are done.
 - [x] Pure logic separated from UI in `js/lib/`, covered by 23 `node:test` unit tests (`npm test`)
 - [x] Browser check in Chromium: every tool exercised, no console errors, no horizontal scroll on mobile
 - [x] CI runs the unit tests on Node 22 and 24 (green on PR #3)
-- [x] Layout checked at 320 px width on every tool (fixed overflow on Test data, Timestamp, Hash calculator and Text diff)
+- [x] Layout checked at 320 px width on every tool (fixed overflow on Test data, Timestamp, Hash calculator, Text diff and Boundary values)
 - [x] README with tool list, local run instructions, Pages deployment and "add a tool" guide
 - [x] First PR (#1) merged into `main`
 
-### Tools (12)
+### Tools (13)
 | Tool | Category | Notes |
 |---|---|---|
 | Counter string | Generate | Ported from the WPF `StringGenerator` app; configurable marker |
@@ -29,6 +29,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 | Encode / decode | Convert | Base64, Base64URL, URL, HTML entities, `\uXXXX` |
 | Timestamp converter | Convert | Epoch seconds/ms and dates, several time zones, live clock |
 | Hash calculator | Convert | MD5 (own implementation), SHA-1/256/384/512 via Web Crypto, HMAC for all five, file hashing up to 100 MB, paste-a-checksum comparer |
+| Boundary values | Generate | Length cases with expected accept/reject and UTF-8 byte counts; exact (BigInt) numeric limits incl. int64/uint64 and decimal steps; date range edges, 18 calendar edge cases, epoch limits, DST gaps/repeats for Europe and the USA (verified against the time zone database) |
 | Text diff | Inspect | Myers diff by line/word/character, inline highlights, ignore whitespace/case, collapse to changes, unified-diff export (verified with `patch`), file loading to report CRLF/LF and final-newline differences |
 | Regex tester | Inspect | Live highlighting, groups and named groups, replace preview, flags, 10 ready-made patterns incl. PESEL/NIP, 1,000-match cap |
 
@@ -49,12 +50,12 @@ Status as of 2026-11-20. Tick items off as they are done.
 1. [x] **Regex tester**: pattern and flags, live matches, capture groups, replace preview
 2. [x] **Hash calculator**: SHA-1/256/384/512 of text or a dropped file (Web Crypto), HMAC option (also MD5 and a checksum comparer)
 3. [x] **Text diff**: two inputs, line and word diff, ignore-whitespace option (also character mode, unified-diff export and file loading)
-4. [ ] **Boundary values**: min/max for common numeric types, dates, and "string of length N±1" for field limits
+4. [x] **Boundary values**: min/max for common numeric types, dates, and "string of length N±1" for field limits (also clock changes and epoch limits)
 5. [ ] **File-of-size generator**: downloadable files of an exact size (txt, csv, json, zero-filled) for upload tests
 6. [ ] **Lorem ipsum / sentence generator**: paragraphs, sentences or words, English and Polish
 7. [ ] **Text utilities**: change case, sort, dedupe, trim, join/split lines, line numbering
 8. [ ] **Colour contrast checker**: WCAG AA/AAA ratio for two colours
-9. [ ] **Date and time test cases**: leap days, DST changes, month ends, year 2038, in a copyable list
+9. [x] **Date and time test cases**: leap days, DST changes, month ends, year 2038, in a copyable list (delivered inside Boundary values)
 10. [ ] **More Polish identifiers**: ID card number (dowód osobisty), KRS, postal code and bank account (NRB) validators
 
 ### 4. Improvements to existing tools
