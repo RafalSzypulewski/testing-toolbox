@@ -4,6 +4,14 @@ All notable changes to Testing Toolbox. The version number is shown at the top o
 Format: `MAJOR.MINOR.PATCH`: a new tool or feature raises the minor number, a fix raises the patch
 number, and a breaking change raises the major number.
 
+## 1.4.0 - 2026-11-20
+
+- Added the JSON toolkit with three tabs
+- Query: search JSON with JSONPath (RFC 9535) including filters, slices, `..` and functions; every match is shown with its normalized path, and an error tells you where the query is wrong
+- Convert: JSON to CSV and back, JSON to YAML and back; nested objects can become dotted columns and be rebuilt again; a YAML text with several documents becomes an array; whole numbers too large to keep exactly are kept as text with a warning
+- Compare: compare two JSON documents by meaning (field order never matters); arrays can be matched by best alignment, by position, in any order or by an identifying field; ignore paths, allow a number tolerance, ignore case or spaces, treat null as missing
+- The tabs now come from one shared component used by Boundary values and the JSON toolkit
+
 ## 1.3.0 - 2026-11-20
 
 - Added the Pairwise generator: describe parameters and their values and get the smallest set of test cases that still covers every pair of values (or every value, or every triple)
