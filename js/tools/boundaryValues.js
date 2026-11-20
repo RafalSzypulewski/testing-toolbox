@@ -16,8 +16,15 @@ const verdict = (valid, yes = 'Accept', no = 'Reject') =>
   h('span', { class: valid ? 'verdict ok' : 'verdict bad' }, valid ? `✓ ${yes}` : `✗ ${no}`);
 
 // Wide tables scroll inside their own box instead of stretching the page on phones.
-function table(headers, rows) {
-  return h('div', { class: 'table-wrap' }, h('table', {}, h('tr', {}, headers.map((x) => h('th', {}, x))), rows));
+// Every row's Copy button is named after the row ("Copy max + 1") so a screen reader can tell
+// the buttons apart; `nameColumns` says which cells make up that name.
+function table(headers, rows, nameColumns = [0]) {
+  const el = h('table', {}, h('tr', {}, headers.map((x) => h('th', {}, x === '' ? h('span', { class: 'sr-only' }, 'Copy') : x))), rows);
+  for (const tr of el.querySelectorAll('tr')) {
+    const button = tr.querySelector('button');
+    if (button) button.setAttribute('aria-label', `Copy ${nameColumns.map((i) => tr.cells[i].textContent).join(', ')}`);
+  }
+  return h('div', { class: 'table-wrap' }, el);
 }
 
 const copyCell = (value, label) => h('td', {}, h('button', { onclick: () => copyText(value, label ?? 'Copied') }, 'Copy'));
@@ -139,7 +146,7 @@ export default {
         try {
           dst.append(table(['Region', 'Case', 'Local time', 'Effect', ''],
             dstCases(Number(dstYear.value)).map((c) => h('tr', {}, h('td', {}, c.region), h('td', {}, c.label), h('td', { class: 'mono' }, c.value),
-              h('td', {}, c.kind === 'skipped' ? 'Time does not exist' : 'Time is ambiguous'), copyCell(c.value)))));
+              h('td', {}, c.kind === 'skipped' ? 'Time does not exist' : 'Time is ambiguous'), copyCell(c.value))), [0, 1]));
         } catch (err) {
           dst.append(h('p', { class: 'status error' }, err.message));
         }
@@ -161,18 +168,40 @@ export default {
       updateDst();
     }
 
-    // ---- tabs ------------------------------------------------------------------------
+    // ---- tabs (WAI-ARIA tabs pattern: arrow keys, Home and End move between tabs) ----------------
     const names = { length: 'Text length', numbers: 'Numbers', dates: 'Dates and times' };
-    let current = 'length';
-    const show = (key) => {
-      current = key;
-      body.replaceChildren(panels[key]);
-      for (const b of tabs.children) b.setAttribute('aria-selected', String(b.dataset.key === current));
+    const keys = Object.keys(names);
+    tabs.setAttribute('aria-label', 'Kind of values');
+    const buttons = {};
+    const show = (key, focus = false) => {
+      for (const k of keys) {
+        const selected = k === key;
+        buttons[k].setAttribute('aria-selected', String(selected));
+        buttons[k].tabIndex = selected ? 0 : -1;
+        panels[k].hidden = !selected;
+      }
+      if (focus) buttons[key].focus();
     };
-    for (const [key, label] of Object.entries(names)) {
-      tabs.append(h('button', { class: 'tab', role: 'tab', 'data-key': key, 'aria-selected': 'false', onclick: () => show(key) }, label));
+    for (const key of keys) {
+      buttons[key] = h('button', {
+        class: 'tab', role: 'tab', id: `boundary-tab-${key}`, 'aria-controls': `boundary-panel-${key}`, 'aria-selected': 'false',
+        onclick: () => show(key),
+        onkeydown: (event) => {
+          const at = keys.indexOf(key);
+          const next = { ArrowRight: keys[(at + 1) % keys.length], ArrowLeft: keys[(at + keys.length - 1) % keys.length], Home: keys[0], End: keys.at(-1) }[event.key];
+          if (next) {
+            event.preventDefault();
+            show(next, true);
+          }
+        },
+      }, names[key]);
+      Object.assign(panels[key], { id: `boundary-panel-${key}` });
+      panels[key].setAttribute('role', 'tabpanel');
+      panels[key].setAttribute('aria-labelledby', `boundary-tab-${key}`);
+      tabs.append(buttons[key]);
+      body.append(panels[key]);
     }
     root.append(tabs, body);
-    show(current);
+    show('length');
   },
 };

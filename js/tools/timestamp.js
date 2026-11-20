@@ -18,7 +18,7 @@ export default {
     const clock = h('p', { class: 'mono' });
 
     const row = (label, value) =>
-      h('tr', {}, h('td', {}, label), h('td', { class: 'mono' }, value), h('td', {}, h('button', { onclick: () => copyText(value) }, 'Copy')));
+      h('tr', {}, h('td', {}, label), h('td', { class: 'mono' }, value), h('td', {}, h('button', { 'aria-label': `Copy ${label}`, onclick: () => copyText(value) }, 'Copy')));
 
     const update = () => {
       table.replaceChildren();
@@ -33,7 +33,7 @@ export default {
         }
         status.ok(unit === 'date' ? 'Parsed as a date.' : `Interpreted as ${unit} since 1970-01-01 UTC.`);
         table.append(
-          h('table', {}, h('tr', {}, h('th', {}, 'Format'), h('th', {}, 'Value'), h('th', {})),
+          h('table', {}, h('tr', {}, h('th', {}, 'Format'), h('th', {}, 'Value'), h('th', {}, h('span', { class: 'sr-only' }, 'Copy'))),
             row('ISO 8601 (UTC)', date.toISOString()),
             row('Epoch seconds', String(Math.floor(date.getTime() / 1000))),
             row('Epoch milliseconds', String(date.getTime())),

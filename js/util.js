@@ -10,6 +10,7 @@ export function h(tag, props = {}, ...children) {
     else if (key in el) el[key] = value;
     else el.setAttribute(key, value === true ? '' : value);
   }
+  if (tag === 'th' && !el.hasAttribute('scope')) el.setAttribute('scope', 'col'); // header cells name their column
   el.append(...children.flat(Infinity).filter((c) => c != null && c !== false));
   return el;
 }
@@ -89,8 +90,8 @@ export function outputPanel({ label = 'Result', filename = 'output.txt', rows = 
   let raw = '';
   const area = h('textarea', { readOnly: true, rows, spellcheck: false, 'aria-label': label });
   const count = h('span', { class: 'muted' });
-  const copy = h('button', { onclick: () => raw && copyText(raw) }, 'Copy');
-  const save = h('button', { onclick: () => raw && downloadFile(filename, raw) }, 'Download');
+  const copy = h('button', { 'aria-label': `Copy ${label.toLowerCase()}`, onclick: () => raw && copyText(raw) }, 'Copy');
+  const save = h('button', { 'aria-label': `Download ${label.toLowerCase()}`, onclick: () => raw && downloadFile(filename, raw) }, 'Download');
   const el = h('div', { class: 'output' }, h('div', { class: 'output-bar' }, h('strong', {}, label), count, h('span', { class: 'spacer' }), copy, save), area);
   return {
     el,

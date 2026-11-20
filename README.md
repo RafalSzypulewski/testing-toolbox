@@ -56,6 +56,17 @@ opening, its title and fitting a phone; add a `e2e/<tool>.spec.js` for what it d
 downloaded PDF and PNG files with `pdfinfo` (poppler-utils) and `identify` (ImageMagick) are skipped if those
 programs are not installed. Both suites run in GitHub Actions on every push and pull request.
 
+## Accessibility
+
+The goal is WCAG 2.2 level AA. What is checked automatically on every push:
+
+- **axe-core** finds no violations on any page, in the light and dark theme, and after using each tool (tables, highlights and results only exist then)
+- **keyboard use**: a skip link is the first Tab stop, focus moves to the new page after navigating, every control shows a visible focus indicator, and the Boundary values tabs follow the ARIA tabs pattern
+- **layout**: no sideways scrolling at 320 px wide or with text enlarged to 200%, and wider letter and line spacing does not break it
+- **colour**: `tests/contrast.test.js` reads `css/style.css` and fails if any text, text box border or focus ring falls below the WCAG contrast limits in either theme
+
+These checks cannot replace listening to the page with a real screen reader (NVDA, VoiceOver) or trying it with voice control, which has not been done yet. If you find a barrier, please open an issue.
+
 ## Deploy to GitHub Pages
 
 1. Push to `main`.

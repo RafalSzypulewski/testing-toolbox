@@ -47,8 +47,10 @@ Status as of 2026-11-20. Tick items off as they are done.
 
 ### 2. Quality and safety net
 - [x] GitHub Actions workflow (`.github/workflows/test.yml`) runs `npm test` on Node 22 and 24 for every push to `main` and every PR
-- [x] Playwright browser tests committed (`npm run e2e`, 99 tests in `e2e/`) and run in CI next to the unit tests; every test fails on console errors; the tool list comes from the registry
-- [ ] Accessibility pass: keyboard-only use, focus order, colour contrast in both themes
+- [x] Playwright browser tests committed (`npm run e2e`, 238 tests in `e2e/`, including the accessibility ones) and run in CI next to the unit tests; every test fails on console errors; the tool list comes from the registry
+- [x] Accessibility pass (1.2.0): skip link, focus handling, ARIA tabs, named buttons, table headers, visible control borders, relative font sizes, reduced motion; axe-core, keyboard, zoom and palette-contrast tests in CI
+- [ ] Try the site with a real screen reader (NVDA on Windows, VoiceOver on Mac/iPhone) and with voice control; automated checks cannot judge how it sounds
+- [ ] Update the GitHub Actions used in `.github/workflows/test.yml` (`checkout`, `setup-node`) to versions that run on Node 24; the CI log warns that the current ones target the deprecated Node 20
 - [ ] Content-Security-Policy `<meta>` tag (the app loads no third-party scripts)
 
 ### 3. New tools, in suggested order
@@ -81,6 +83,7 @@ Browsers cannot make arbitrary network requests (CORS), so a port checker or HTT
 - Some clipboards normalise special characters (for example null bytes), so verify pasted values in the target system.
 - The Polish identifiers are checksum-valid but random; phone numbers are random mobile numbers and may belong to real people, so do not use them to send messages.
 - JWT decoding does not verify signatures.
+- The theme button shows only the symbol ◐ (it has the accessible name "Toggle theme"); axe lists it as "needs review" because it cannot compute contrast for a symbol. Its contrast was checked by hand (15 to 1).
 - Text utilities sorting depends on the chosen language rules (default: your browser's); sorting 100,000 lines takes about 2 seconds. A text that starts with an empty line and has no final line break cannot be reversed back exactly, because a final line break is treated as the end of the last line (like Unix tools).
 - The file generator is limited to 100 MiB (files are built in memory), cannot make a PNG that is 1 to 11 bytes larger than its minimum, and does not yet make JPEG, ZIP or Office files. Padded files compress extremely well; use random bytes to test upload speed.
 - Browsers convert line breaks typed or pasted into a text box to LF, so CRLF vs LF differences can only be detected for text loaded from a file (Text diff offers this).
