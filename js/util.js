@@ -80,17 +80,23 @@ export function statusLine() {
   return { el, ok: (m) => set('ok', m), error: (m) => set('error', m), info: (m) => set('', m), clear: () => set('', '') };
 }
 
-/** Read-only output box with Copy / Download buttons and a length counter. */
+/**
+ * Read-only output box with Copy / Download buttons and a length counter.
+ * The text box itself turns every line break into LF, so the exact text (for example with
+ * CRLF) is kept separately and is what Copy, Download and get() return.
+ */
 export function outputPanel({ label = 'Result', filename = 'output.txt', rows = 8 } = {}) {
+  let raw = '';
   const area = h('textarea', { readOnly: true, rows, spellcheck: false, 'aria-label': label });
   const count = h('span', { class: 'muted' });
-  const copy = h('button', { onclick: () => area.value && copyText(area.value) }, 'Copy');
-  const save = h('button', { onclick: () => area.value && downloadFile(filename, area.value) }, 'Download');
+  const copy = h('button', { onclick: () => raw && copyText(raw) }, 'Copy');
+  const save = h('button', { onclick: () => raw && downloadFile(filename, raw) }, 'Download');
   const el = h('div', { class: 'output' }, h('div', { class: 'output-bar' }, h('strong', {}, label), count, h('span', { class: 'spacer' }), copy, save), area);
   return {
     el,
-    get: () => area.value,
+    get: () => raw,
     set(text) {
+      raw = text;
       area.value = text;
       count.textContent = text ? `${Array.from(text).length.toLocaleString('en-US')} characters` : '';
     },
