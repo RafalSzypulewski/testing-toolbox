@@ -9,10 +9,11 @@ import encoder from './tools/encoder.js';
 import jwtDecoder from './tools/jwtDecoder.js';
 import timestamp from './tools/timestamp.js';
 import regexTester from './tools/regexTester.js';
+import hashCalculator from './tools/hashCalculator.js';
 
 /**
  * Tool shape:
  * { id, name, category, description, keywords?: string[], render(root: HTMLElement): void | (() => void) }
  * render may return a cleanup function (called when the user navigates away).
  */
-export const tools = [counterString, randomString, naughtyStrings, testData, textInspector, jsonFormatter, encoder, jwtDecoder, timestamp, regexTester];
+export const tools = [counterString, randomString, naughtyStrings, testData, textInspector, jsonFormatter, encoder, jwtDecoder, timestamp, regexTester, hashCalculator];

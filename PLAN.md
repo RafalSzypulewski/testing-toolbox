@@ -12,10 +12,11 @@ Status as of 2026-11-20. Tick items off as they are done.
 - [x] Pure logic separated from UI in `js/lib/`, covered by 23 `node:test` unit tests (`npm test`)
 - [x] Browser check in Chromium: every tool exercised, no console errors, no horizontal scroll on mobile
 - [x] CI runs the unit tests on Node 22 and 24 (green on PR #3)
+- [x] Layout checked at 320 px width on every tool (fixed overflow on Test data, Timestamp and Hash calculator)
 - [x] README with tool list, local run instructions, Pages deployment and "add a tool" guide
 - [x] First PR (#1) merged into `main`
 
-### Tools (10)
+### Tools (11)
 | Tool | Category | Notes |
 |---|---|---|
 | Counter string | Generate | Ported from the WPF `StringGenerator` app; configurable marker |
@@ -27,6 +28,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 | JSON formatter | Convert | Format, minify, sort keys, error line and column |
 | Encode / decode | Convert | Base64, Base64URL, URL, HTML entities, `\uXXXX` |
 | Timestamp converter | Convert | Epoch seconds/ms and dates, several time zones, live clock |
+| Hash calculator | Convert | MD5 (own implementation), SHA-1/256/384/512 via Web Crypto, HMAC for all five, file hashing up to 100 MB, paste-a-checksum comparer |
 | Regex tester | Inspect | Live highlighting, groups and named groups, replace preview, flags, 10 ready-made patterns incl. PESEL/NIP, 1,000-match cap |
 
 ## Next
@@ -44,7 +46,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 
 ### 3. New tools, in suggested order
 1. [x] **Regex tester**: pattern and flags, live matches, capture groups, replace preview
-2. [ ] **Hash calculator**: SHA-1/256/384/512 of text or a dropped file (Web Crypto), HMAC option
+2. [x] **Hash calculator**: SHA-1/256/384/512 of text or a dropped file (Web Crypto), HMAC option (also MD5 and a checksum comparer)
 3. [ ] **Text diff**: two inputs, line and word diff, ignore-whitespace option
 4. [ ] **Boundary values**: min/max for common numeric types, dates, and "string of length N±1" for field limits
 5. [ ] **File-of-size generator**: downloadable files of an exact size (txt, csv, json, zero-filled) for upload tests

@@ -46,7 +46,7 @@ code, pre, textarea, .mono { font-family: var(--mono); font-size: 13px; }
 .nav-link[aria-current='page'] { background: var(--accent); color: var(--accent-text); }
 .nav-empty { color: var(--muted); padding: .5rem .6rem; }
 
-main { padding: 1.5rem; max-width: 980px; width: 100%; outline: none; }
+main { padding: 1.5rem; max-width: 980px; width: 100%; min-width: 0; outline: none; }
 .lead { color: var(--muted); margin: 0 0 1.25rem; }
 
 .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
@@ -60,6 +60,7 @@ input, select, textarea, button { font: inherit; color: var(--text); }
 input, select, textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: .45rem .6rem; }
 input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 textarea { width: 100%; resize: vertical; line-height: 1.45; }
+input[type='text'], input[type='search'], input[type='file'], select { max-width: 100%; }
 input[type='number'] { width: 9rem; }
 input[type='checkbox'] { accent-color: var(--accent); }
 button { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: .45rem .9rem; cursor: pointer; }
@@ -67,7 +68,7 @@ button:hover { background: var(--hover); }
 button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
 button.primary:hover { filter: brightness(1.08); }
 
-.field { display: flex; flex-direction: column; gap: .25rem; }
+.field { display: flex; flex-direction: column; gap: .25rem; max-width: 100%; }
 .field-label { font-weight: 600; font-size: .85rem; }
 .field small, .muted { color: var(--muted); font-size: .8rem; }
 .check { display: inline-flex; align-items: center; gap: .4rem; }
