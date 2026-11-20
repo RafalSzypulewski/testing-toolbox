@@ -4,6 +4,11 @@ All notable changes to Testing Toolbox. The version number is shown at the top o
 Format: `MAJOR.MINOR.PATCH`: a new tool or feature raises the minor number, a fix raises the patch
 number, and a breaking change raises the major number.
 
+## 1.1.0 - 2026-11-20
+
+- Added an in-app changelog page (`#/changelog`). The version badge in the header opens it instead of linking to GitHub, so it works on networks that block github.com and before a branch is merged. The GitHub link stays on that page as a secondary option
+- Added browser tests (Playwright) for every tool and the shell, run in CI on every push and pull request
+
 ## 1.0.0 - 2026-11-20
 
 First versioned release. 15 tools, all running locally in the browser:
