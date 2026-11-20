@@ -66,9 +66,9 @@ js/tools/          one UI module per tool
 tests/             node:test unit tests
 ```
 
-## Ideas for later
+## Roadmap
 
-Text diff, regex tester, hash calculator, file-of-size generator, boundary-value helper, colour contrast checker.
+See [PLAN.md](PLAN.md) for what is done and what is planned next.
 
 ## Licence
 
