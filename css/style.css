@@ -161,3 +161,10 @@ table.diff td.code::before { content: attr(data-sign); position: absolute; left:
 .verdict.bad { color: var(--error); }
 .table-wrap { overflow-x: auto; max-width: 100%; border-radius: 8px; }
 .table-wrap table { min-width: 100%; width: max-content; }
+
+/* ---- changelog page ---- */
+.changelog h3 { margin: 1.5rem 0 .4rem; padding-top: .6rem; border-top: 1px solid var(--border); }
+.changelog ul { margin: .25rem 0 1rem; padding-left: 1.3rem; }
+.changelog li { margin: .2rem 0; }
+.changelog code { background: var(--hover); border-radius: 4px; padding: 0 .3rem; }
+.pill { margin-left: .6rem; font: 600 11px/1 system-ui, sans-serif; letter-spacing: .02em; color: var(--accent-text); background: var(--accent); border-radius: 999px; padding: .2rem .55rem; vertical-align: middle; }

@@ -12,7 +12,9 @@ Status as of 2026-11-20. Tick items off as they are done.
 - [x] Pure logic separated from UI in `js/lib/`, covered by 23 `node:test` unit tests (`npm test`)
 - [x] Browser check in Chromium: every tool exercised, no console errors, no horizontal scroll on mobile
 - [x] CI runs the unit tests on Node 22 and 24 (green on PR #3)
-- [x] Version number (1.0.0) shown on every page, linked to `CHANGELOG.md`; a test keeps `js/version.js`, `package.json` and the changelog in sync
+- [x] Version number shown on every page; a test keeps `js/version.js`, `package.json` and `CHANGELOG.md` in sync
+- [x] In-app changelog page (`#/changelog`, 1.1.0): the version badge opens it, so it works without github.com; its Markdown reader never produces HTML or unsafe links
+- [x] Browser tests checked by breaking the app on purpose (10 deliberate bugs: 9 caught, 1 turned out to be unnecessary code and was removed)
 - [x] Layout checked at 320 px width on every tool (fixed overflow on Test data, Timestamp, Hash calculator, Text diff and Boundary values)
 - [x] README with tool list, local run instructions, Pages deployment and "add a tool" guide
 - [x] First PR (#1) merged into `main`
@@ -45,7 +47,7 @@ Status as of 2026-11-20. Tick items off as they are done.
 
 ### 2. Quality and safety net
 - [x] GitHub Actions workflow (`.github/workflows/test.yml`) runs `npm test` on Node 22 and 24 for every push to `main` and every PR
-- [ ] Commit the Playwright smoke test (currently only run ad hoc) as an optional `npm run e2e`
+- [x] Playwright browser tests committed (`npm run e2e`, 99 tests in `e2e/`) and run in CI next to the unit tests; every test fails on console errors; the tool list comes from the registry
 - [ ] Accessibility pass: keyboard-only use, focus order, colour contrast in both themes
 - [ ] Content-Security-Policy `<meta>` tag (the app loads no third-party scripts)
 

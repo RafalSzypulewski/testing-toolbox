@@ -1,13 +1,19 @@
 {
   "name": "testing-toolbox",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "A collection of browser-based tools for software testers. Runs entirely client-side.",
   "type": "module",
   "scripts": {
     "test": "node --test \"tests/*.test.js\"",
-    "serve": "python3 -m http.server 8080"
+    "e2e": "playwright test --trace off",
+    "serve": "node e2e/server.mjs"
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  },
   "license": "MIT"
 }

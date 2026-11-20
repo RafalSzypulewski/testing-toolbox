@@ -36,9 +36,25 @@ feature raises the minor number (1.1.0), a fix the patch number (1.0.1), a break
 ES modules do not load from `file://`, so serve the folder:
 
 ```sh
-npm run serve        # python3 -m http.server 8080 -> http://localhost:8080
-npm test             # unit tests (Node 22+, no dependencies)
+npm run serve        # tiny static server -> http://localhost:4173 (set PORT to change it)
 ```
+
+## Tests
+
+```sh
+npm test             # unit tests for all logic in js/lib (Node 22+, no dependencies)
+
+npm ci                                  # once: installs Playwright
+npx playwright install --with-deps chromium   # once: downloads the test browser
+npm run e2e          # browser tests for every tool, started against the local server
+```
+
+The browser tests (`e2e/`) open each tool in Chromium and use it the way a person would: typing, clicking,
+copying, downloading files, at desktop and 320 px phone width. Every test also fails on any console error or
+uncaught exception. The list of tools comes from `js/registry.js`, so a new tool is automatically checked for
+opening, its title and fitting a phone; add a `e2e/<tool>.spec.js` for what it does. Tests that check
+downloaded PDF and PNG files with `pdfinfo` (poppler-utils) and `identify` (ImageMagick) are skipped if those
+programs are not installed. Both suites run in GitHub Actions on every push and pull request.
 
 ## Deploy to GitHub Pages
 

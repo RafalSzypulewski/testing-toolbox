@@ -1,10 +1,11 @@
 import { tools } from './registry.js';
 import { h } from './util.js';
-import { VERSION, CHANGELOG_URL } from './version.js';
+import { renderChangelog } from './changelog.js';
+import { VERSION } from './version.js';
 
 const versionLink = document.getElementById('version');
 versionLink.textContent = `v${VERSION}`;
-versionLink.href = CHANGELOG_URL;
+versionLink.href = '#/changelog';
 
 const nav = document.getElementById('nav');
 const main = document.getElementById('main');
@@ -62,7 +63,7 @@ function renderNav() {
 function renderHome() {
   main.append(
     h('h2', {}, 'Testing Toolbox'),
-    h('p', { class: 'lead' }, 'Small tools for everyday testing. Everything runs in your browser; nothing you type is sent anywhere.'),
+    h('p', { class: 'lead' }, 'Small tools for everyday testing. Everything runs in your browser; nothing you type is sent anywhere. ', h('a', { href: '#/changelog' }, `What's new in v${VERSION}`)),
     h(
       'div',
       { class: 'tool-grid' },
@@ -78,7 +79,13 @@ function route() {
   }
   main.replaceChildren();
   const tool = tools.find((t) => t.id === currentId());
-  if (tool) {
+  if (currentId() === 'changelog') {
+    document.title = 'Changelog · Testing Toolbox';
+    main.append(h('h2', {}, 'Changelog'));
+    const body = h('div');
+    main.append(body);
+    renderChangelog(body);
+  } else if (tool) {
     document.title = `${tool.name} · Testing Toolbox`;
     main.append(h('h2', {}, tool.name), h('p', { class: 'lead' }, tool.description));
     const body = h('div');
