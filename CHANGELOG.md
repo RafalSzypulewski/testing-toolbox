@@ -4,6 +4,15 @@ All notable changes to Testing Toolbox. The version number is shown at the top o
 Format: `MAJOR.MINOR.PATCH`: a new tool or feature raises the minor number, a fix raises the patch
 number, and a breaking change raises the major number.
 
+## 1.3.0 - 2026-11-20
+
+- Added the Pairwise generator: describe parameters and their values and get the smallest set of test cases that still covers every pair of values (or every value, or every triple)
+- Rules for combinations that cannot happen, for example `IF OS = iOS THEN Browser = Safari`; the tool tells you which pairs your rules exclude, so a typo in a rule shows up
+- Values marked with `!` are invalid: each is tested alone, once, with valid values everywhere else
+- The same input always gives the same cases; "Try another arrangement" gives another valid set
+- Coverage is re-checked independently after every run, and the result can be copied or downloaded as spreadsheet text, CSV, Markdown, a Gherkin examples table or JSON
+- The download file name of result boxes now follows the chosen format
+
 ## 1.2.0 - 2026-11-20
 
 Accessibility pass, measured against WCAG 2.2 level AA:

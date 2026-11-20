@@ -177,7 +177,14 @@ th, td, .table-wrap { position: relative; }
 .skip-link { position: absolute; left: .75rem; top: -4rem; z-index: 30; background: var(--accent); color: var(--accent-text); padding: .5rem .9rem; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top .15s; }
 .skip-link:focus { top: 0; }
 .brand-h1 { margin: 0; font-size: inherit; line-height: inherit; }
-.list-row:focus-visible, .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.list-row:focus-visible, .tab:focus-visible, [tabindex='0']:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* ---- pairwise generator ---- */
+.bad-value { color: var(--error); font-weight: 600; }
+.row-invalid td { background: var(--del-bg); }
+details { margin: .75rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+details ul { margin: .25rem 0 .5rem; padding-left: 1.3rem; }

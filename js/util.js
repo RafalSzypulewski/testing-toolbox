@@ -88,14 +88,18 @@ export function statusLine() {
  */
 export function outputPanel({ label = 'Result', filename = 'output.txt', rows = 8 } = {}) {
   let raw = '';
+  let name = filename;
   const area = h('textarea', { readOnly: true, rows, spellcheck: false, 'aria-label': label });
   const count = h('span', { class: 'muted' });
   const copy = h('button', { 'aria-label': `Copy ${label.toLowerCase()}`, onclick: () => raw && copyText(raw) }, 'Copy');
-  const save = h('button', { 'aria-label': `Download ${label.toLowerCase()}`, onclick: () => raw && downloadFile(filename, raw) }, 'Download');
+  const save = h('button', { 'aria-label': `Download ${label.toLowerCase()}`, onclick: () => raw && downloadFile(name, raw) }, 'Download');
   const el = h('div', { class: 'output' }, h('div', { class: 'output-bar' }, h('strong', {}, label), count, h('span', { class: 'spacer' }), copy, save), area);
   return {
     el,
     get: () => raw,
+    setFilename(next) {
+      name = next;
+    },
     set(text) {
       raw = text;
       area.value = text;
