@@ -1,0 +1,115 @@
+// Curated "naughty" strings for exploratory testing. For testing systems you are
+// authorised to test only. No DOM access.
+
+const e = (category, label, value) => ({ category, label, value });
+
+export const NAUGHTY = [
+  // Empty & whitespace
+  e('Whitespace', 'Single space', ' '),
+  e('Whitespace', 'Leading and trailing spaces', '   padded   '),
+  e('Whitespace', 'Tab', 'a\tb'),
+  e('Whitespace', 'LF line break', 'line1\nline2'),
+  e('Whitespace', 'CRLF line break', 'line1\r\nline2'),
+  e('Whitespace', 'Non-breaking space', 'a b'),
+  e('Whitespace', 'Only whitespace', ' \t\n '),
+  e('Whitespace', 'Ideographic space', 'a　b'),
+
+  // Special characters
+  e('Special characters', 'ASCII punctuation', '!@#$%^&*()_+-=[]{}|;\':",./<>?`~'),
+  e('Special characters', 'Backslashes', '\\ \\\\ \\\\\\ \\n \\u0041'),
+  e('Special characters', 'Quotes', `"double" 'single' \`back\` “smart” ‘smart’`),
+  e('Special characters', 'Null byte', 'before\u0000after'),
+  e('Special characters', 'Percent sequences', '%s %d %x %n %00 %20 %%'),
+  e('Special characters', 'ANSI escape', '\u001b[31mred\u001b[0m'),
+  e('Special characters', 'Control characters', '\u0001\u0002\u0003\u0007\u0008\u007f'),
+
+  // Unicode
+  e('Unicode', 'Polish diacritics', 'ąćęłńóśźż ĄĆĘŁŃÓŚŹŻ'),
+  e('Unicode', 'Zalgo text', 'Zalgo'.split('').map((c) => `${c}̖̀҉̕`).join('')),
+  e('Unicode', 'Emoji', '😀 🚀 👍🏽 🏳️‍🌈 👨‍👩‍👧‍👦'),
+  e('Unicode', 'Astral plane (4-byte UTF-8)', '𝕋𝕖𝕤𝕥 𠜎 𐍈'),
+  e('Unicode', 'Arabic (right-to-left)', 'مرحبا بالعالم'),
+  e('Unicode', 'Hebrew (right-to-left)', 'שלום עולם'),
+  e('Unicode', 'Right-to-left override', 'abc‮def‬ghi'),
+  e('Unicode', 'Zero-width space', 'zero​width'),
+  e('Unicode', 'Zero-width joiner', 'a‍b'),
+  e('Unicode', 'Byte order mark at start', '﻿BOM'),
+  e('Unicode', 'Combining accent vs precomposed', 'é vs é'),
+  e('Unicode', 'Fullwidth letters and digits', 'ＴＥＳＴ １２３'),
+  e('Unicode', 'Cyrillic look-alike (homoglyph)', 'pаypal.com'),
+  e('Unicode', 'Turkish dotted/dotless i', 'I ı İ i'),
+  e('Unicode', 'CJK', '表ポあA鷗Œé田中さんにあげて下さい'),
+  e('Unicode', 'German sharp s (case mapping)', 'Straße STRASSE ẞ'),
+  e('Unicode', 'Soft hyphen', 'soft­hyphen'),
+
+  // Injection
+  e('Injection', 'SQL: always true', "' OR '1'='1"),
+  e('Injection', 'SQL: drop table', "'; DROP TABLE users;--"),
+  e('Injection', 'SQL: comment', "admin'--"),
+  e('Injection', 'SQL: time delay', "1; SELECT pg_sleep(5)--"),
+  e('Injection', 'XSS: script tag', '<script>alert(1)</script>'),
+  e('Injection', 'XSS: attribute breakout', '"><img src=x onerror=alert(1)>'),
+  e('Injection', 'XSS: svg onload', '<svg/onload=alert(1)>'),
+  e('Injection', 'XSS: javascript URL', 'javascript:alert(1)'),
+  e('Injection', 'HTML entities', '<b>bold</b> &amp; &lt;i&gt; &#60;'),
+  e('Injection', 'Template: curly braces', '{{7*7}}'),
+  e('Injection', 'Template: dollar braces', '${7*7}'),
+  e('Injection', 'Template: ERB', '<%= 7*7 %>'),
+  e('Injection', 'Command: semicolon', '; ls -la'),
+  e('Injection', 'Command: substitution', '$(whoami) `id`'),
+  e('Injection', 'Command: pipe', '| cat /etc/passwd'),
+  e('Injection', 'Path traversal (Unix)', '../../../../etc/passwd'),
+  e('Injection', 'Path traversal (Windows)', '..\\..\\..\\windows\\win.ini'),
+  e('Injection', 'Path traversal (encoded)', '%2e%2e%2f%2e%2e%2fetc%2fpasswd'),
+  e('Injection', 'LDAP', '*)(uid=*))(|(uid=*'),
+  e('Injection', 'XXE', '<?xml version="1.0"?><!DOCTYPE a [<!ENTITY x SYSTEM "file:///etc/passwd">]><a>&x;</a>'),
+  e('Injection', 'CSV formula', '=1+1'),
+  e('Injection', 'CSV formula: command', "=cmd|' /C calc'!A0"),
+  e('Injection', 'CSV formula: at sign', '@SUM(1+1)'),
+  e('Injection', 'Header injection (CRLF)', 'value\r\nSet-Cookie: injected=1'),
+  e('Injection', 'Log injection', 'user\nINFO admin logged in successfully'),
+  e('Injection', 'Open redirect', '//example.com/%2f..'),
+
+  // Numbers
+  e('Numbers', 'Zero', '0'),
+  e('Numbers', 'Negative zero', '-0'),
+  e('Numbers', 'Negative one', '-1'),
+  e('Numbers', 'Max int32', '2147483647'),
+  e('Numbers', 'Max int32 + 1', '2147483648'),
+  e('Numbers', 'Min int32', '-2147483648'),
+  e('Numbers', 'Max int64', '9223372036854775807'),
+  e('Numbers', 'Max int64 + 1', '9223372036854775808'),
+  e('Numbers', 'Max safe JS integer + 1', '9007199254740992'),
+  e('Numbers', 'Overflowing exponent', '1e309'),
+  e('Numbers', 'Float precision', '0.30000000000000004'),
+  e('Numbers', 'Leading zeros', '00123'),
+  e('Numbers', 'Thousands separator', '1,000.00'),
+  e('Numbers', 'Decimal comma', '1.000,50'),
+  e('Numbers', 'Fullwidth digits', '１２３'),
+  e('Numbers', 'NaN', 'NaN'),
+  e('Numbers', 'Infinity', 'Infinity'),
+
+  // Reserved words & names
+  e('Reserved words', 'null', 'null'),
+  e('Reserved words', 'NULL', 'NULL'),
+  e('Reserved words', 'undefined', 'undefined'),
+  e('Reserved words', 'None / nil', 'None nil'),
+  e('Reserved words', 'true / false', 'true false'),
+  e('Reserved words', 'Windows device name', 'CON'),
+  e('Reserved words', 'Windows device name (with extension)', 'NUL.txt'),
+  e('Reserved words', 'Dot', '.'),
+  e('Reserved words', 'Double dot', '..'),
+  e('Reserved words', 'Name with apostrophe', "O'Brien"),
+  e('Reserved words', 'Name with hyphen and diacritics', 'Anna-Maria Łukaszewicz-Żółć'),
+  e('Reserved words', 'Single-letter surname', 'Li'),
+  e('Reserved words', 'Very long surname', 'Wolfeschlegelsteinhausenbergerdorff'),
+
+  // Long
+  e('Long strings', '256 characters', 'A'.repeat(256)),
+  e('Long strings', '1,000 characters', 'A'.repeat(1000)),
+  e('Long strings', '10,000 characters', 'A'.repeat(10000)),
+  e('Long strings', '255 emoji (4 bytes each)', '😀'.repeat(255)),
+  e('Long strings', '1,000 words', Array.from({ length: 1000 }, (_, i) => `w${i}`).join(' ')),
+];
+
+export const CATEGORIES = [...new Set(NAUGHTY.map((n) => n.category))];
