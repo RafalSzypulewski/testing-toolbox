@@ -10,7 +10,7 @@ export default {
   keywords: ['sql', 'xss', 'injection', 'emoji', 'unicode', 'rtl', 'edge', 'boundary', 'security'],
   render(root) {
     const search = h('input', { type: 'search', placeholder: 'Filter…', 'aria-label': 'Filter strings' });
-    const category = h('select', {}, h('option', { value: '' }, 'All categories'), CATEGORIES.map((c) => h('option', { value: c }, c)));
+    const category = h('select', { 'aria-label': 'Category' }, h('option', { value: '' }, 'All categories'), CATEGORIES.map((c) => h('option', { value: c }, c)));
     const list = h('div', { class: 'list-box' });
     const count = h('span', { class: 'muted' });
     let shown = NAUGHTY;

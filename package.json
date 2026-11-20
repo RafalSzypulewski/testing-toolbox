@@ -1,6 +1,6 @@
 {
   "name": "testing-toolbox",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "A collection of browser-based tools for software testers. Runs entirely client-side.",
   "type": "module",
@@ -13,6 +13,7 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@playwright/test": "1.63.0"
   },
   "license": "MIT"

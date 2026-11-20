@@ -62,7 +62,7 @@ export default {
           bar.value = 0;
           status.info(`Creating ${name} (${i + 1} of ${sizes.length})…`);
           const blob = await generateFile({ format: format.value, size: s, png: dims.value, onProgress: (f) => (bar.value = f) });
-          rows.push(h('tr', {}, h('td', { class: 'mono' }, name), h('td', {}, fmt(s)), h('td', {}, h('button', { class: 'primary', onclick: () => downloadBlob(name, blob) }, 'Download'))));
+          rows.push(h('tr', {}, h('td', { class: 'mono' }, name), h('td', {}, fmt(s)), h('td', {}, h('button', { class: 'primary', 'aria-label': `Download ${name}`, onclick: () => downloadBlob(name, blob) }, 'Download'))));
         } catch (err) {
           rows.push(h('tr', {}, h('td', { class: 'mono' }, name), h('td', {}, fmt(Math.max(s, 0))), h('td', { class: 'status error' }, err.message)));
         }
@@ -72,7 +72,7 @@ export default {
       const failed = rows.filter((r) => r.querySelector('.error')).length;
       if (failed === rows.length) status.error('Could not create the file.');
       else status[failed ? 'error' : 'ok'](failed ? `${rows.length - failed} of ${rows.length} files created.` : `${rows.length} file${rows.length === 1 ? '' : 's'} ready. Press Download.`);
-      results.append(h('div', { class: 'table-wrap' }, h('table', {}, h('tr', {}, h('th', {}, 'File'), h('th', {}, 'Bytes'), h('th', {})), rows)));
+      results.append(h('div', { class: 'table-wrap' }, h('table', {}, h('tr', {}, h('th', {}, 'File'), h('th', {}, 'Bytes'), h('th', {}, h('span', { class: 'sr-only' }, 'Download'))), rows)));
     };
 
     go.addEventListener('click', run);

@@ -52,10 +52,13 @@ function renderNav() {
     return;
   }
   for (const category of [...new Set(visible.map((t) => t.category))]) {
-    nav.append(h('div', { class: 'nav-group' }, category));
-    for (const tool of visible.filter((t) => t.category === category)) {
-      nav.append(h('a', { class: 'nav-link', href: `#/${tool.id}`, 'aria-current': tool.id === currentId() ? 'page' : null }, tool.name));
-    }
+    const labelId = `nav-group-${category.toLowerCase()}`;
+    nav.append(
+      h('div', { class: 'nav-section', role: 'group', 'aria-labelledby': labelId },
+        h('div', { class: 'nav-group', id: labelId }, category),
+        visible.filter((t) => t.category === category).map((tool) =>
+          h('a', { class: 'nav-link', href: `#/${tool.id}`, 'aria-current': tool.id === currentId() ? 'page' : null }, tool.name))),
+    );
   }
 }
 
@@ -71,6 +74,8 @@ function renderHome() {
     ),
   );
 }
+
+let firstRoute = true;
 
 function route() {
   if (cleanup) {
@@ -102,7 +107,18 @@ function route() {
   }
   renderNav();
   window.scrollTo(0, 0);
+  // After a navigation, move focus to the new content so keyboard and screen-reader users start
+  // there instead of being left on the link they pressed. Not on the first load: that would
+  // steal focus from the browser's own address bar.
+  if (!firstRoute) main.focus({ preventScroll: true });
+  firstRoute = false;
 }
+
+// "Skip to the tool": the page uses #/... addresses, so a plain #anchor link would change the page.
+document.getElementById('skip').addEventListener('click', (event) => {
+  event.preventDefault();
+  main.focus();
+});
 
 search.addEventListener('input', renderNav);
 window.addEventListener('hashchange', route);

@@ -31,11 +31,11 @@ export default {
       if (!results.length) return;
       const fmt = (r) => (format.value === 'base64' ? r.base64 : format.value === 'HEX' ? r.hex.toUpperCase() : r.hex);
       table.append(
-        h('table', {}, h('tr', {}, h('th', {}, 'Algorithm'), h('th', {}, useHmac.input.checked ? 'HMAC' : 'Hash'), h('th', {})),
+        h('table', {}, h('tr', {}, h('th', {}, 'Algorithm'), h('th', {}, useHmac.input.checked ? 'HMAC' : 'Hash'), h('th', {}, h('span', { class: 'sr-only' }, 'Copy'))),
           results.map((r) =>
             h('tr', {}, h('td', {}, r.algo),
               h('td', { class: r.error ? 'status error' : 'mono' }, r.error ?? fmt(r)),
-              h('td', {}, r.error ? '' : h('button', { onclick: () => copyText(fmt(r), `${r.algo} copied`) }, 'Copy'))))),
+              h('td', {}, r.error ? '' : h('button', { 'aria-label': `Copy ${r.algo} ${useHmac.input.checked ? 'HMAC' : 'hash'}`, onclick: () => copyText(fmt(r), `${r.algo} copied`) }, 'Copy'))))),
       );
       const wanted = expected.value.trim();
       if (!wanted) return compare.clear();
