@@ -1,6 +1,6 @@
 {
   "name": "testing-toolbox",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "description": "A collection of browser-based tools for software testers. Runs entirely client-side.",
   "type": "module",

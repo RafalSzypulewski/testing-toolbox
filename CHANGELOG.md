@@ -4,6 +4,13 @@ All notable changes to Testing Toolbox. The version number is shown at the top o
 Format: `MAJOR.MINOR.PATCH`: a new tool or feature raises the minor number, a fix raises the patch
 number, and a breaking change raises the major number.
 
+## 1.5.0 - 2026-11-21
+
+- JSON toolkit, new Validate tab: check data against a JSON Schema (draft 2020-12, plus the older spellings of definitions, tuple items and dependencies); every problem is listed with the path of the value and the schema rule it broke, with the reasons for each failed option of anyOf / oneOf; formats (email, date, date-time, uuid, uri, ipv4, ipv6 and more) can be checked or ignored
+- Validate warns when the schema uses something it cannot check (unevaluatedProperties, unevaluatedItems, references to other files) instead of silently passing
+- JSON toolkit, Query tab: JSONPath now also works on YAML text; a YAML text with several documents is searched as an array of them
+- Validate accepts the schema and the data as JSON or as YAML
+
 ## 1.4.0 - 2026-11-20
 
 - Added the JSON toolkit with three tabs
