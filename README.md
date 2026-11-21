@@ -16,7 +16,7 @@ A collection of small browser-based tools for software testers. Everything runs 
 | **Encode / decode** | Base64, Base64URL, URL, HTML entities, `\uXXXX` escapes |
 | **Timestamp converter** | Epoch seconds/ms and dates across time zones |
 | **Hash calculator** | MD5, SHA-1/256/384/512 of text or a file (up to 100 MB), HMAC, and a checksum comparer that accepts hex or Base64 |
-| **JSON toolkit** | Three tabs: JSONPath (RFC 9535) search with normalized paths; JSON to CSV, CSV to JSON, JSON to YAML and YAML to JSON; semantic JSON compare (array alignment, by-key matching, ignored paths, number tolerance) |
+| **JSON toolkit** | Four tabs: JSONPath (RFC 9535) search on JSON or YAML with normalized paths; JSON to CSV, CSV to JSON, JSON to YAML and YAML to JSON; semantic JSON compare (array alignment, by-key matching, ignored paths, number tolerance); JSON Schema validation (draft 2020-12) listing every problem with its path and rule |
 | **Pairwise generator** | Parameters and values in, the smallest set of test cases covering every pair (or value, or triple) out; rules for impossible combinations, invalid values tested one at a time, independent coverage check, export as TSV/CSV/Markdown/Gherkin/JSON |
 | **File generator** | Download files of an exact size (up to 100 MiB): txt, csv, json, valid PNG (several dimensions), valid PDF, zero-filled or random binary; optional size −1 / size / size +1 set for upload limit tests |
 | **Boundary values** | Strings at min−1/min/max/max+1 length (letters, Polish, emoji, counter string; shows UTF-8 bytes), exact numeric limits for int8 to uint64 or any range and step, date range edges, leap and impossible dates, 32-bit epoch limits, daylight-saving gaps and repeats |

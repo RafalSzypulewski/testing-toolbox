@@ -4,6 +4,7 @@ import { query, JsonPathError } from '../lib/jsonpath.js';
 import { jsonToCsv, csvToJson, DELIMITERS, CsvError } from '../lib/csv.js';
 import { parseYaml, stringifyYaml, YamlError } from '../lib/yaml.js';
 import { diffJson, ARRAY_MODES, DiffError } from '../lib/jsondiff.js';
+import { validate, SchemaError } from '../lib/jsonschema.js';
 
 const SAMPLE = `{
   "store": {
@@ -51,6 +52,53 @@ function readJson(text, name) {
   return { value: JSON.parse(text) };
 }
 
+const FORMAT_OPTIONS = [['json', 'JSON'], ['yaml', 'YAML']];
+
+/** Reads JSON or YAML text; YAML with several documents becomes an array of them. Returns {value, warnings} or {error}. */
+function readDocument(text, format, name) {
+  if (format === 'json') {
+    const doc = readJson(text, name);
+    return doc.error ? doc : { value: doc.value, warnings: [] };
+  }
+  try {
+    const { documents, warnings } = parseYaml(text);
+    const list = [...warnings];
+    if (documents.length > 1) list.push(`${name}: the text holds ${documents.length} YAML documents, so they are treated as an array.`);
+    return { value: documents.length === 1 ? documents[0] : documents, warnings: list };
+  } catch (err) {
+    if (err instanceof YamlError) return { error: `${name}: ${err.message}` };
+    throw err;
+  }
+}
+
+const SAMPLE_YAML = `store:
+  book:
+    - {category: reference, author: Nigel Rees, title: Sayings of the Century, price: 8.95}
+    - {category: fiction, author: Evelyn Waugh, title: Sword of Honour, price: 12.99}
+    - {category: fiction, author: Herman Melville, title: Moby Dick, price: 8.99}
+  bicycle: {color: red, price: 399}
+`;
+
+const SCHEMA_SAMPLE = `{
+  "type": "object",
+  "required": ["id", "email", "role"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "email": { "type": "string", "format": "email" },
+    "role": { "enum": ["admin", "user"] },
+    "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "maxItems": 3 }
+  },
+  "additionalProperties": false
+}`;
+
+const SCHEMA_DATA_SAMPLE = `{
+  "id": 0,
+  "email": "anna.example.com",
+  "role": "guest",
+  "tags": ["qa", "qa"],
+  "age": 31
+}`;
+
 const shown = (v) => (v === undefined ? '' : JSON.stringify(v));
 const KIND = {
   added: ['+', 'Added', 'only in the right side'],
@@ -60,21 +108,27 @@ const KIND = {
 };
 
 function queryTab() {
-  const input = h('textarea', { rows: 12, spellcheck: false, value: SAMPLE, 'aria-label': 'JSON to search' });
+  const format = h('select', {}, FORMAT_OPTIONS.map(([v, l]) => h('option', { value: v }, l)));
+  const input = h('textarea', { rows: 12, spellcheck: false, value: SAMPLE, 'aria-label': 'Text to search' });
   const path = h('input', { type: 'text', value: '$.store.book[?@.price < 10].title', spellcheck: false, size: 50, 'aria-describedby': 'jt-query-help' });
   const status = statusLine();
   const result = h('div');
   const out = outputPanel({ label: 'Matched values', filename: 'matches.json', rows: 6 });
   let timer;
+  const notes = h('div');
   let found = [];
+  let last = format.value;
 
   const run = () => {
     result.replaceChildren();
+    notes.replaceChildren();
     found = [];
     out.set('');
-    if (input.value.trim() === '') return status.info('Paste some JSON to search.');
-    const doc = readJson(input.value, 'JSON');
+    const label = format.value === 'yaml' ? 'YAML' : 'JSON';
+    if (input.value.trim() === '') return status.info(`Paste some ${label} to search.`);
+    const doc = readDocument(input.value, format.value, label);
     if (doc.error) return status.error(doc.error);
+    for (const w of doc.warnings) notes.append(h('p', { class: 'note' }, w));
     const source = path.value.trim();
     try {
       found = query(doc.value, source);
@@ -99,15 +153,23 @@ function queryTab() {
   };
   input.addEventListener('input', later);
   path.addEventListener('input', later);
+  format.addEventListener('change', () => {
+    // swap in the matching sample only if the person has not changed the previous one
+    const samples = { json: SAMPLE, yaml: SAMPLE_YAML };
+    if (input.value === samples[last]) input.value = samples[format.value];
+    last = format.value;
+    run();
+  });
 
   const el = h('div', {},
-    field('JSON', input),
+    h('div', { class: 'form-row' }, field('Format', format)),
+    field('Text to search', input),
     h('div', { class: 'form-row', style: 'margin-top:.75rem' },
       field('JSONPath query', path),
       h('button', { onclick: () => found.length && copyText(found.map((m) => m.pathText).join('\n'), 'Paths copied') }, 'Copy paths')),
-    status.el, result, out.el,
+    status.el, notes, result, out.el,
     h('p', { class: 'note', id: 'jt-query-help' },
-      'JSONPath as defined by RFC 9535. $ is the root, .name or [\'name\'] a member, [0] an item, [-1] the last, [1:3] a slice, * everything one level down, '
+      'JSONPath as defined by RFC 9535, also on YAML (the YAML is read into the same structure first, so paths look the same). $ is the root, .name or [\'name\'] a member, [0] an item, [-1] the last, [1:3] a slice, * everything one level down, '
       + '.. searches at any depth, [?@.price < 10] filters. Functions: length, count, match, search, value. Regular expressions use the browser engine.'));
   return { el, run, stop: () => clearTimeout(timer) };
 }
@@ -265,16 +327,74 @@ function compareTab() {
   return { el, run, stop: () => clearTimeout(timer) };
 }
 
+function validateTab() {
+  const schemaFormat = h('select', {}, FORMAT_OPTIONS.map(([v, l]) => h('option', { value: v }, l)));
+  const dataFormat = h('select', {}, FORMAT_OPTIONS.map(([v, l]) => h('option', { value: v }, l)));
+  const schema = h('textarea', { rows: 16, spellcheck: false, value: SCHEMA_SAMPLE, 'aria-label': 'JSON Schema' });
+  const data = h('textarea', { rows: 16, spellcheck: false, value: SCHEMA_DATA_SAMPLE, 'aria-label': 'Data to check' });
+  const formats = checkbox('Check formats (email, date, uuid, uri, ipv4 ...)', true);
+  const status = statusLine();
+  const notes = h('div');
+  const result = h('div');
+  let timer;
+
+  const run = () => {
+    result.replaceChildren();
+    notes.replaceChildren();
+    if (schema.value.trim() === '' || data.value.trim() === '') return status.info('Paste a schema and the data to check against it.');
+    const s = readDocument(schema.value, schemaFormat.value, 'Schema');
+    if (s.error) return status.error(s.error);
+    const d = readDocument(data.value, dataFormat.value, 'Data');
+    if (d.error) return status.error(d.error);
+    let outcome;
+    try {
+      outcome = validate(d.value, s.value, { formats: formats.input.checked, maxErrors: 500 });
+    } catch (err) {
+      if (err instanceof SchemaError) return status.error(`Schema: ${err.message}`);
+      throw err;
+    }
+    for (const w of [...s.warnings, ...d.warnings, ...outcome.warnings]) notes.append(h('p', { class: 'note' }, w));
+    if (outcome.valid) return status.ok('Valid: the data satisfies the schema.');
+    const n = outcome.errors.length;
+    status.error(`Not valid: ${outcome.truncated ? `more than ${n}` : n} ${n === 1 ? 'problem' : 'problems'}.`);
+    result.append(h('div', { class: 'table-wrap', role: 'region', tabindex: 0, 'aria-label': 'Problems, scrollable' },
+      h('table', {},
+        h('caption', { class: 'sr-only' }, 'Problems'),
+        h('tr', {}, h('th', {}, 'Where'), h('th', {}, 'Rule'), h('th', {}, 'Problem')),
+        outcome.errors.map((e) => h('tr', {},
+          h('td', {}, h('code', {}, e.path)),
+          h('td', {}, h('code', {}, e.keyword)),
+          h('td', {}, e.message, e.causes ? h('ul', {}, e.causes.map((c) => h('li', {}, c))) : null))))));
+  };
+  const later = () => {
+    clearTimeout(timer);
+    timer = setTimeout(run, 300);
+  };
+  for (const c of [schema, data]) c.addEventListener('input', later);
+  for (const c of [schemaFormat, dataFormat, formats.input]) c.addEventListener('change', run);
+
+  const el = h('div', {},
+    h('div', { class: 'two-col' },
+      h('div', {}, h('div', { class: 'form-row' }, field('Schema format', schemaFormat)), field('JSON Schema', schema)),
+      h('div', {}, h('div', { class: 'form-row' }, field('Data format', dataFormat)), field('Data to check', data))),
+    h('div', { class: 'form-row', style: 'margin-top:.75rem' }, formats.el),
+    status.el, notes, result,
+    h('p', { class: 'note' }, 'Draft 2020-12, including the older spellings of definitions, tuple items and dependencies. Every problem is listed with the path of the value and the schema rule it broke, '
+      + 'not only the first. $ref works inside the schema text (#/$defs/name, $anchor, $id); references to other files and unevaluatedProperties / unevaluatedItems are not supported, and the tool says so when it meets them.'));
+  return { el, run, stop: () => clearTimeout(timer) };
+}
+
 export default {
   id: 'json-toolkit',
   name: 'JSON toolkit',
   category: 'Convert',
-  description: 'Search JSON with JSONPath, convert between JSON, CSV and YAML, and compare two JSON documents by meaning.',
-  keywords: ['json', 'jsonpath', 'query', 'csv', 'yaml', 'convert', 'compare', 'diff', 'semantic', 'api', 'response', 'filter', 'jq'],
+  description: 'Search JSON or YAML with JSONPath, convert between JSON, CSV and YAML, compare two JSON documents by meaning, and check data against a JSON Schema.',
+  keywords: ['json', 'jsonpath', 'query', 'csv', 'yaml', 'convert', 'compare', 'diff', 'semantic', 'api', 'response', 'filter', 'jq', 'schema', 'validate', 'validation', 'jsonschema'],
   render(root) {
     const q = queryTab();
     const c = convertTab();
     const d = compareTab();
+    const v = validateTab();
     const wrap = (el) => h('div', {}, el);
     const tabs = tabsWidget({
       label: 'JSON tools',
@@ -283,12 +403,14 @@ export default {
         { key: 'query', label: 'Query', panel: wrap(q.el) },
         { key: 'convert', label: 'Convert', panel: wrap(c.el) },
         { key: 'compare', label: 'Compare', panel: wrap(d.el) },
+        { key: 'validate', label: 'Validate', panel: wrap(v.el) },
       ],
     });
     root.append(tabs.el);
     q.run();
     c.run();
     d.run();
-    return () => [q, c, d].forEach((t) => t.stop());
+    v.run();
+    return () => [q, c, d, v].forEach((t) => t.stop());
   },
 };
